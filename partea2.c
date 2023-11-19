@@ -96,8 +96,6 @@ void imagine(const char *fis) {
         exit(-1);
     }
 
-    // ... (restul operațiilor de citire a antetului BMP)
-
     char modTimp[20];
     struct tm *timeInfo = localtime(&fileInfo.st_mtime);
     strftime(modTimp, sizeof(modTimp), "%d.%m.%Y", timeInfo);
@@ -106,7 +104,6 @@ void imagine(const char *fis) {
     permisiune(fileInfo.st_mode);
 
     if (img.signature == 0x4D42) {
-        // BMP file
         snprintf(outputBuffer, sizeof(outputBuffer),
                  "File Name: %s\n"
                  "Height: %d\n"
@@ -120,7 +117,7 @@ void imagine(const char *fis) {
                  "Others Permissions: %s\n",
                  fis, img.height, img.width, fileInfo.st_size, fileInfo.st_uid, modTimp, fileInfo.st_nlink, permUSR, permGRP, permOTH);
     } else if (S_ISREG(fileInfo.st_mode)) {
-        // Regular file without BMP extension
+   
         snprintf(outputBuffer, sizeof(outputBuffer),
                  "File Name: %s\n"
                  "File Size: %lu\n"
@@ -132,7 +129,7 @@ void imagine(const char *fis) {
                  "Others Permissions: %s\n",
                  fis, fileInfo.st_size, fileInfo.st_uid, modTimp, fileInfo.st_nlink, permUSR, permGRP, permOTH);
     } else if (S_ISLNK(fileInfo.st_mode)) {
-        // Symbolic link
+
         char target[BUFFER];
         ssize_t targetSize = readlink(fis, target, BUFFER - 1);
         if (targetSize != -1) {
